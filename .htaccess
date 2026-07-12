@@ -1,0 +1,36 @@
+RewriteEngine On 
+RewriteBase /
+
+# Excluir archivos estáticos (mejor usar [L] para detener el procesamiento)
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule \.(css|js|png|jpg|jpeg|gif|ico|svg|php|txt|woff2|ttf)$ - [L,NC]
+
+# Si es un archivo/directorio que existe, servirlo directamente
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Redirigir rutas de un nivel (ej: /login)
+RewriteCond %{DOCUMENT_ROOT}/pages/$1.php -f
+RewriteRule ^([^/]+)/?$ pages/$1.php [L]
+
+# Redirigir rutas de dos niveles (ej: /admin/users)
+RewriteCond %{DOCUMENT_ROOT}/pages/$1/$2.php -f
+RewriteRule ^([^/]+)/([^/]+)/?$ pages/$1/$2.php [L]
+
+# Redirigir rutas de tres niveles (ej: /api/v1/users)
+RewriteCond %{DOCUMENT_ROOT}/pages/$1/$2/$3.php -f
+RewriteRule ^([^/]+)/([^/]+)/([^/]+)/?$ pages/$1/$2/$3.php [L]
+
+# 404 - debe ir al final para capturar todo lo que no coincida con las reglas anteriores
+ErrorDocument 404 /pages/404.php
+
+# Configuración de impresiones
+RewriteRule ^configImpresiones$ creadorImpresiones/index.php
+RewriteRule ^configImpresionesLista$ creadorImpresiones/lista.php
+RewriteRule ^configImpresionesTest$ creadorImpresiones/downloadPDF.php
+RewriteRule ^visualizarDocumento$ creadorImpresiones/downloadPDF.php
+# Configuración de impresiones - fin
+
+# login de apartamentos
+RewriteRule ^loginApartamento$ indexApartamento.php

@@ -1,0 +1,69 @@
+    *{
+    font-family: Arial, Helvetica, sans-serif;
+    }
+    table.dltrc {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0px;
+        border: solid #000 2px;
+        /* border-radius: 8px; */
+        margin-bottom: 5px;
+    }
+    
+    tr.dlheader {
+        text-align: center;
+        font-weight: bold;
+        border-left: solid rgba(0, 0, 0, 0.2) 1px;
+        padding: 2px
+    }
+    
+    td.dlheader {
+        background: rgba(0, 0, 0, 0.2);
+        text-align: center;
+        font-weight: bold;
+        border-left: solid rgba(0, 0, 0, 0.2) 1px;
+        /* border-radius: 0px; */
+        padding: 2px;
+        /* color: white; */
+    }
+    
+    tr.dlinfo,
+    td.dlinfo {
+        text-align: left;
+        border-left: solid #000 1px !important;
+        border-top: solid #000 1px !important;
+        padding: 2px;
+        padding-left: 0.5rem;
+    
+    }
+    
+    tr.dlinfo:first-child,
+    tr.dlheader:first-child,
+    td.dlinfo:first-child,
+    td.dlheader:first-child {
+        border-left: none;
+    }
+    
+    td.dlheader:first-child {
+        /* border-radius: 5px 0 0 0; */
+    }
+    
+    td.dlheader:last-child {
+        /* border-radius: 0 5px 0 0; */
+    }
+    
+    td.hover01:hover {
+        background-color: #dde6ee;
+    }
+    
+    td.hover02:hover {
+        background-color: #dde6ee;
+    }
+    
+    td.hover02:first-child {
+        /* border-radius: 0 0 0 6px; */
+    }
+    
+    td.hover02:last-child {
+        /* border-radius: 0 0 6px 0; */
+    }

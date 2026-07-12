@@ -1,0 +1,56 @@
+# ----------------------------------------------
+# Modulo creador de Impresiones
+# 25 09 2023 - JRodriguez
+# ----------------------------------------------
+# este modulo se encarga de crear una base de datos de archivos de impresión
+# la configuración general se guarda en una tabla con su id y descripción, mientras que la configuración de Impresiones
+# se guarda en un archivo .css con las propiedades de impresión como tamaño, orientación y margenes de la hoja
+# ----------------------------------------------
+# para usar este metodo de impresion solo toca ajustar todo el contenido de la impresion, excluyendo encabezados y pie de pagina como se aprecia en "prueba.php"
+# ----------------------------------------------
+
+# copiar en .htaccess
+
+# Configuración de impresiones
+RewriteRule ^configImpresiones$ creadorImpresiones/index.php
+RewriteRule ^configImpresionesLista$ creadorImpresiones/lista.php
+RewriteRule ^configImpresionesTest$ creadorImpresiones/downloadPDF.php
+RewriteRule ^visualizarDocumento$ creadorImpresiones/downloadPDF.php
+# Configuración de impresiones - fin
+
+# ----------------------------------------------
+# la base de datos para configuracion de impresion se crean automaticamente con el uso de automaticForm, si es un sistema de base nueva ya viene por defecto, si es un sistema base antigua toca instalarlo manualmente, el codigo se cuenta en baseDev/plugins/automaticForm
+# ----------------------------------------------
+
+# ----------------------------------------------
+# todas las configuraciones o plantillas creadas por el usuario se almacenan en la tabla configImpresiones y tambien en una carpeta en formato .css con las propiedades de impresion de cada una en ./creadorImpresiones/config/ID_plantilla.css
+# ----------------------------------------------
+
+# ----------------------------------------------
+# para instalarlo en cualquier pantalla se hace lo siguiente: 
+<?php 
+        $botonesImprimir = [
+          ['Consulta', base64_encode($Base.'Imprimir_Historia_Clinica_plantilla.php?HC='.encrypt($historiaClinica1).'&tipo='. $tipo_encriptado2.'')],
+          ['Exámenes', base64_encode($Base.'Imprimir_Historia_Clinica.php?HC='.encrypt($historiaClinica1).'&tipo='. $tipo_encriptado2.'')],
+        ];
+        $_GET['botones'] = base64_encode(json_encode($botonesImprimir));
+        include './creadorImpresiones/seleccionarMetodoImpresion.php';
+      ?>
+# ----------------------------------------------
+
+# ----------------------------------------------
+# configImpresiones == panel para crear y editar plantillas de impresion
+# configImpresionesLista == lista de mis plantillas creadas
+# configImpresionesTest == una vista de pruebas para que el usuario pueda ir viendo como va a quedar su plantilla final
+# visualizarDocumento == plantilla para imprimir / descargar cualquier documento
+
+# ----------------------------------------------
+# en el archivo downloadPDF.php, modificar las rutas de las plantillas
+$html   = 'prueba';
+if ($_GET['t'] == 1){
+    $html = (file_get_contents_curl('https://admin.tacopollo.hn/admin/creadorImpresiones/prueba.php?FAID=' . $idCss));
+}else{
+    $url = $_GET['uZ'];
+    $html = (file_get_contents_curl('https://admin.tacopollo.hn/admin/creadorImpresiones/plantilla.php?FAID=' . $idCss . '&url=' . $url));
+}
+# ----------------------------------------------

@@ -1,0 +1,84 @@
+
+
+     * {
+         print-color-adjust: exact !important;
+         color-adjust: exact !important;
+         text-rendering: optimizeLegibility !important;
+         -webkit-print-color-adjust: exact !important;
+         -webkit-color-adjust: exact !important;
+         -moz-print-color-adjust: exact !important;
+         -moz-color-adjust: exact !important;
+     }
+@import url('http://fonts.cdnfonts.com/css/tahoma');
+
+@page {
+    margin: 0cm 0cm !important;
+    font-family: 'Tahoma', sans-serif !important;
+    size: 21.6cm 27.9cm portrait;
+    
+}
+
+/** Defina ahora los márgenes reales de cada página en el PDF **/
+body {
+    margin-top: 5cm !important;
+    margin-left: 1cm !important;
+    margin-right: 1cm !important;
+    margin-bottom: 4cm !important;
+    font-family: 'Tahoma', sans-serif !important;
+}
+
+/** Definir las reglas del encabezado **/
+#header {
+    position: fixed !important;
+    top: 0cm !important;
+    left: 0cm !important;
+    right: 0cm !important;
+    height: 4cm !important;
+    padding-top: 1cm !important;
+    padding-left: 1cm !important;
+    padding-right: 1cm !important;
+}
+
+/** Definir las reglas del pie de página **/
+#footer {
+    position: fixed !important;
+    bottom: 0cm !important;
+    left: 0cm !important;
+    right: 0cm !important;
+    height: 3cm !important;
+    padding-bottom: 1cm !important;
+    padding-left: 1cm !important;
+    padding-right: 1cm !important;
+}
+
+#page {
+    width: 100% !important;
+}
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p,
+    div,
+    td {
+        page-break-before: auto !important;
+        page-break-after: auto !important;
+        page-break-inside: auto !important;
+    }
+
+    .marcaAgua {        
+        width: 100% !important;
+        height: 100% !important;
+        opacity: 0.1;
+        position: fixed;
+        background-image: url('https://erp.medicalsoftplus.com/baseDev//creadorImpresiones/config/marcas/632515422Plantilla vigilancia epidemiologica.png');
+        background-repeat: no-repeat;
+        background-position: center;        
+        top: 5cm !important;
+        left: 1cm !important;
+        right: 1cm !important;
+        bottom: 4cm !important;
+    }    
+    
