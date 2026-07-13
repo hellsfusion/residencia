@@ -52,6 +52,14 @@ while ($row = mysqli_fetch_assoc($resultApartamentos)) {
 ?>
 
 <link rel="stylesheet" href="<?= $Base ?>/dist/css/table_print.css">
+<style>
+    .p-0 {
+        padding: 0 !important;
+    }
+    .m-0 {
+        margin: 0 !important;
+    }
+</style>
 
 <?php foreach ($rowApartamentos as $apartamento) { ?>
     <p>Periodo de búsqueda: <strong><?= date('Y-m', strtotime($fechaInicio)) ?></strong> a <strong><?= date('Y-m', strtotime($fechaFin)) ?></strong></p>
