@@ -80,59 +80,67 @@ $infoBoxes = [
   <section class="content">
     <div class="container-fluid">
 
-      <div class="row">
 
+      <?php
 
-        <div class="col-12 col-sm-12 col-md-12">
-          <div class="card card-secondary">
-
-            <div class="card-header">
-              <h3 class="card-title">Resumen General</h3>
-
-              <div class="card-tools">
-                
-              </div>
-            </div>
-
-            <div class="card-body">
-              <?php
-
-              // buscar datos de la tabla
-              $query = "SELECT * from apartamentos
+      // buscar datos de la tabla
+      $query = "SELECT * from apartamentos
               where 1=1
               and activo = 1
               ";
-              $result = mysqli_query($conn, $query);
-              $rowData = [];
-              if ($result && mysqli_num_rows($result) > 0) {
-                while ($row = mysqli_fetch_assoc($result)) {
-                  $rowData[] = $row;
-                }
-              }
+      $result = mysqli_query($conn, $query);
+      $rowData = [];
+      if ($result && mysqli_num_rows($result) > 0) {
+        while ($row = mysqli_fetch_assoc($result)) {
+          $rowData[] = $row;
+        }
+      }
 
-              foreach ($rowData as $apto) {
+      foreach ($rowData as $apto) {
+      ?>
+        <div class="row">
+
+
+          <div class="col-12 col-sm-12 col-md-12">
+            <div class="card card-secondary collapsed-card">
+
+              <div class="card-header">
+                <h3 class="card-title">Resumen General - <?= $apto['apartamento'] ?> <?= $apto['propietario'] ?></h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-plus"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="card-body">
+                <?php
                 $_GET['idApartamento'] = $apto['id'];
                 $_GET['fechaInicio'] = $fechaInicioSistema;
                 $_GET['fechaFin'] = date('Y-m-d');
                 $_GET['include'] = 1;
 
                 $botonesImprimir = [
-                  ['', base64_encode($Base . 'prints/resumen_general.php?idApartamento=' . $apto['id'].'&fechaInicio=' . $fechaInicioSistema . '&fechaFin=' . date('Y-m-d').'&include=0'), 0],
+                  ['', base64_encode($Base . 'prints/resumen_general.php?idApartamento=' . $apto['id'] . '&fechaInicio=' . $fechaInicioSistema . '&fechaFin=' . date('Y-m-d') . '&include=0'), 0],
                 ];
                 $_GET['botones'] = base64_encode(json_encode($botonesImprimir));
                 include __DIR__ . '/../creadorImpresiones/seleccionarMetodoImpresion.php';
-                
+
 
                 include __DIR__ . '/../prints/resumen_general.php';
-              }
-
-              ?>
+                ?>
+              </div>
             </div>
           </div>
+
+
         </div>
+      <?php
+      }
 
+      ?>
 
-      </div>
 
 
 
