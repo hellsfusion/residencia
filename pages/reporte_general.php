@@ -84,15 +84,13 @@ $infoBoxes = [
 
 
         <div class="col-12 col-sm-12 col-md-12">
-          <div class="card card-secondary collapsed-card">
+          <div class="card card-secondary">
 
-            <div class="card-header" data-card-widget="collapse" style="cursor: pointer; user-select: none;">
+            <div class="card-header">
               <h3 class="card-title">Resumen General</h3>
 
               <div class="card-tools">
-                <button type="button" class="btn btn-tool">
-                  <i class="fas fa-minus"></i>
-                </button>
+                
               </div>
             </div>
 
@@ -117,6 +115,14 @@ $infoBoxes = [
                 $_GET['fechaInicio'] = $fechaInicioSistema;
                 $_GET['fechaFin'] = date('Y-m-d');
                 $_GET['include'] = 1;
+
+                $botonesImprimir = [
+                  ['', base64_encode($Base . 'prints/resumen_general.php?idApartamento=' . $apto['id'].'&fechaInicio=' . $fechaInicioSistema . '&fechaFin=' . date('Y-m-d').'&include=0'), 0],
+                ];
+                $_GET['botones'] = base64_encode(json_encode($botonesImprimir));
+                include __DIR__ . '/../creadorImpresiones/seleccionarMetodoImpresion.php';
+                
+
                 include __DIR__ . '/../prints/resumen_general.php';
               }
 
