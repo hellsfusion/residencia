@@ -100,7 +100,7 @@ $infoBoxes = [
               <?php
 
               // buscar datos de la tabla
-              $query = "SELECT * from aptos
+              $query = "SELECT * from apartamentos
               where 1=1
               and activo = 1
               ";
