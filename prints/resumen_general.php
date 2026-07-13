@@ -121,7 +121,7 @@ while ($row = mysqli_fetch_assoc($resultApartamentos)) {
         <tbody>
             <tr class="dlheader">
                 <td class="dlheader" style="width: 2cm;">Fecha</td>
-                <td class="dlheader" style="width: 5cm;">Descripción</td>
+                <td class="dlheader" style="width: 8cm;">Descripción</td>
                 <td class="dlheader">Estado</td>
             </tr>
             </tr>
