@@ -79,28 +79,6 @@ $infoBoxes = [
   <!-- Main content -->
   <section class="content">
     <div class="container-fluid">
-      <!-- Info boxes -->
-      <div class="row">
-        <?php foreach ($infoBoxes as $box) { ?>
-          <div class="col-12 col-sm-12 col-md-12">
-            <div class="info-box">
-              <span class="info-box-icon <?= $box['bg']; ?> elevation-1"><i class="<?= $box['icon']; ?>"></i></span>
-
-              <div class="info-box-content">
-                <span class="info-box-text"><?= $box['text']; ?></span>
-                <span class="info-box-number">
-                  <?= $box['number']; ?>
-                </span>
-              </div>
-              <!-- /.info-box-content -->
-            </div>
-            <!-- /.info-box -->
-          </div>
-          <!-- /.col -->
-        <?php } ?>
-        <!-- /.col -->
-      </div>
-      <!-- /.row -->
 
       <div class="row">
 
@@ -120,11 +98,28 @@ $infoBoxes = [
 
             <div class="card-body">
               <?php
-              $_GET['idApartamento'] = 0;
-              $_GET['fechaInicio'] = $fechaInicioSistema;
-              $_GET['fechaFin'] = date('Y-m-d');
-              $_GET['include'] = 1;
-              include __DIR__ . '/../prints/resumen_general.php';
+
+              // buscar datos de la tabla
+              $query = "SELECT * from aptos
+              where 1=1
+              and activo = 1
+              ";
+              $result = mysqli_query($conn, $query);
+              $rowData = [];
+              if ($result && mysqli_num_rows($result) > 0) {
+                while ($row = mysqli_fetch_assoc($result)) {
+                  $rowData[] = $row;
+                }
+              }
+
+              foreach ($rowData as $apto) {
+                $_GET['idApartamento'] = $apto['id'];
+                $_GET['fechaInicio'] = $fechaInicioSistema;
+                $_GET['fechaFin'] = date('Y-m-d');
+                $_GET['include'] = 1;
+                include __DIR__ . '/../prints/resumen_general.php';
+              }
+
               ?>
             </div>
           </div>
