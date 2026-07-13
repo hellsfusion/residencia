@@ -9,47 +9,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Install lftp
         run: sudo apt-get update && sudo apt-get install -y lftp
 
-      - name: Deploy changed files
+      - name: Deploy via FTP
         env:
           FTP_SERVER: ${{ secrets.FTP_SERVER }}
           FTP_USER: ${{ secrets.FTP_USERNAME }}
           FTP_PASS: ${{ secrets.FTP_PASSWORD }}
         run: |
-          LFTP_CMDS=$(mktemp)
-          echo "set ssl:verify-certificate no" > "$LFTP_CMDS"
-          echo "open -u \"$FTP_USER\",\"$FTP_PASS\" \"$FTP_SERVER\"" >> "$LFTP_CMDS"
-
-          if [ "${{ github.event.before }}" = "0000000000000000000000000000000000000000" ]; then
-            echo "Primer deploy: subiendo todo..."
-            echo "mirror -R --delete --verbose --exclude-glob .git/ --exclude-glob node_modules/ --exclude-glob vendor/ --exclude-glob comprobantes/ --exclude-glob prints/ --exclude-glob uploads/ --exclude-glob .env --exclude-glob .gitignore ./ /htdocs/" >> "$LFTP_CMDS"
-          else
-            FILES=$(git diff --name-only "${{ github.event.before }}" "${{ github.sha }}")
-            if [ -z "$FILES" ]; then
-              echo "No hay archivos modificados."
-              exit 0
-            fi
-
-            while IFS= read -r f; do
-              case "$f" in
-                .git/*|.gitignore|node_modules/*|vendor/*|comprobantes/*|prints/*|uploads/*|.env) continue ;;
-              esac
-              if [ -f "$f" ]; then
-                dir=$(dirname "$f")
-                if [ "$dir" != "." ]; then
-                  echo "mkdir -p -f \"/htdocs/$dir\"" >> "$LFTP_CMDS"
-                fi
-                echo "put -O \"/htdocs/$dir\" \"$f\"" >> "$LFTP_CMDS"
-                echo "  -> $f"
-              fi
-            done <<< "$FILES"
-          fi
-
-          echo "quit" >> "$LFTP_CMDS"
-          lftp -f "$LFTP_CMDS"
-          rm -f "$LFTP_CMDS"
+          lftp -c "
+            set ssl:verify-certificate no;
+            open -u \"$FTP_USER\",\"$FTP_PASS\" \"$FTP_SERVER\";
+            mirror -R --delete --verbose \
+              --exclude-glob .git/ \
+              --exclude-glob .gitignore \
+              --exclude-glob node_modules/ \
+              --exclude-glob vendor/ \
+              --exclude-glob comprobantes/ \
+              --exclude-glob prints/ \
+              --exclude-glob uploads/ \
+              --exclude-glob .env \
+              ./ /htdocs/
+          "
