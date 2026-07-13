@@ -4,7 +4,7 @@ $idApartamento = $_GET['idApartamento'] ?? 0;
 $fechaInicio = $_GET['fechaInicio'] ?? 0;
 $fechaFin = $_GET['fechaFin'] ?? 0;
 $include = $_GET['include'] ?? 0;
-var_dump($idApartamento);
+// var_dump($idApartamento);
 
 if ($include == 0) {
     include __DIR__ . '/../php/funciones.php';
@@ -22,7 +22,7 @@ while ($row = mysqli_fetch_assoc($resultCuotas)) {
 }
 
 // recibos 
-$idApartamento = $_SESSION['id'];
+// $idApartamento = $_SESSION['id'];
 $queryRecibos = "SELECT * from ingresos
 where 1=1
 and activo = 1
