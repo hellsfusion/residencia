@@ -29,6 +29,8 @@ jobs:
               --exclude-glob skills-lock.json \
               --exclude-glob node_modules/ \
               --exclude-glob vendor/ \
+              --exclude-glob plugins/ \
+              --exclude-glob dist/ \
               --exclude-glob .env \
               ./ /htdocs/
           "
