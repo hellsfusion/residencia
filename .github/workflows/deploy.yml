@@ -2,22 +2,66 @@ name: Deploy to InfinityFree
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
-  web-deploy:
-    name: Deploy
+  deploy:
     runs-on: ubuntu-latest
     steps:
-    - name: Get latest code
-      uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Sync files via FTP
-      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-      with:
-        server: ${{ secrets.FTP_SERVER }}
-        username: ${{ secrets.FTP_USERNAME }}
-        password: ${{ secrets.FTP_PASSWORD }}
-        local-dir: ./
-        server-dir: ./htdocs/
+      - name: Install lftp
+        run: sudo apt-get update && sudo apt-get install -y lftp
+
+      - name: Deploy changed files
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_USER: ${{ secrets.FTP_USERNAME }}
+          FTP_PASS: ${{ secrets.FTP_PASSWORD }}
+        run: |
+          if [ "${{ github.event.before }}" = "0000000000000000000000000000000000000000" ]; then
+            echo "Primer deploy: subiendo todo..."
+            lftp -e "set ssl:verify-certificate no; mirror -R --delete --verbose \
+              --exclude-glob .git/ \
+              --exclude-glob node_modules/ \
+              --exclude-glob vendor/ \
+              --exclude-glob comprobantes/ \
+              --exclude-glob prints/ \
+              --exclude-glob uploads/ \
+              --exclude-glob .env \
+              --exclude-glob .gitignore \
+              ./ /; quit" \
+              -u "$FTP_USER","$FTP_PASS" "$FTP_SERVER"
+          else
+            FILES=$(git diff --name-only "${{ github.event.before }}" "${{ github.sha }}")
+            if [ -z "$FILES" ]; then
+              echo "No hay archivos modificados."
+              exit 0
+            fi
+
+            SCRIPT_FILE=$(mktemp)
+            {
+              echo "set ssl:verify-certificate no"
+              echo "open -u \"$FTP_USER\",\"$FTP_PASS\" \"$FTP_SERVER\""
+            } > "$SCRIPT_FILE"
+
+            while IFS= read -r f; do
+              case "$f" in
+                .git/*|.gitignore|node_modules/*|vendor/*|comprobantes/*|prints/*|uploads/*|.env) continue ;;
+              esac
+              if [ -f "$f" ]; then
+                dir=$(dirname "$f")
+                if [ "$dir" != "." ]; then
+                  echo "mkdir -p \"$dir\"" >> "$SCRIPT_FILE"
+                fi
+                echo "put -O \"$dir\" \"$f\"" >> "$SCRIPT_FILE"
+                echo "  -> $f"
+              fi
+            done <<< "$FILES"
+
+            echo "quit" >> "$SCRIPT_FILE"
+            lftp -f "$SCRIPT_FILE"
+            rm -f "$SCRIPT_FILE"
+          fi

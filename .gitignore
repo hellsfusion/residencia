@@ -4,6 +4,5 @@ vendor/
 .DS_Store
 Thumbs.db
 *.log
-comprobantes/
-prints/
-uploads/
+dist/
+plugins/

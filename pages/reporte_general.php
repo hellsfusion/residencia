@@ -120,7 +120,7 @@ $infoBoxes = [
 
             <div class="card-body">
               <?php
-              $_GET['idApartamento'] = $_SESSION['id'];
+              $_GET['idApartamento'] = 0;
               $_GET['fechaInicio'] = $fechaInicioSistema;
               $_GET['fechaFin'] = date('Y-m-d');
               $_GET['include'] = 1;

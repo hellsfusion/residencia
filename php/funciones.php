@@ -22,6 +22,7 @@ $menu = [
  ['nombre' => 'Documentos Subidos', 'url' => 'documentos', 'icon' => 'far fa-file-word'],
  ['nombre' => 'Documentos Generados', 'url' => 'documentos_generados_plantillas', 'icon' => 'far fa-file-word'],
  ['nombre' => 'Contraseñas', 'url' => 'claves', 'icon' => 'fas fa-unlock-alt'],
+ ['nombre' => 'Reporte General', 'url' => 'reporte_general', 'icon' => 'fas fa-unlock-alt'],
 
 
  // ['nombre' => 'Reportes', 'url' => 'reportes', 'icon' => 'far fa-file-pdf'],
