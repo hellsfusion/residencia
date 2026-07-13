@@ -90,7 +90,7 @@ while ($row = mysqli_fetch_assoc($resultApartamentos)) {
             ?>
                 <tr class="dlinfo">
                     <td class="dlinfo" style="width: 2cm; white-space: nowrap;"><?= date('Y-m', strtotime($cuota['fechaRegistro'])) ?></td>
-                    <td class="dlinfo" style="width: 5cm;"><?= $cuota['descripcion'] ?></td>
+                    <td class="dlinfo" style="width: 8cm;"><?= $cuota['descripcion'] ?></td>
                     <td class="dlinfo">
                         <?php foreach ($rowEncontrado as $reciboEncontrado) { ?>
                             <strong><?= $reciboEncontrado ? 'Pagado' : 'Sin Información' ?></strong>
