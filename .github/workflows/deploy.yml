@@ -21,31 +21,19 @@ jobs:
           FTP_USER: ${{ secrets.FTP_USERNAME }}
           FTP_PASS: ${{ secrets.FTP_PASSWORD }}
         run: |
+          LFTP_CMDS=$(mktemp)
+          echo "set ssl:verify-certificate no" > "$LFTP_CMDS"
+          echo "open -u \"$FTP_USER\",\"$FTP_PASS\" \"$FTP_SERVER\"" >> "$LFTP_CMDS"
+
           if [ "${{ github.event.before }}" = "0000000000000000000000000000000000000000" ]; then
             echo "Primer deploy: subiendo todo..."
-            lftp -e "set ssl:verify-certificate no; mirror -R --delete --verbose \
-              --exclude-glob .git/ \
-              --exclude-glob node_modules/ \
-              --exclude-glob vendor/ \
-              --exclude-glob comprobantes/ \
-              --exclude-glob prints/ \
-              --exclude-glob uploads/ \
-              --exclude-glob .env \
-              --exclude-glob .gitignore \
-              ./ /; quit" \
-              -u "$FTP_USER","$FTP_PASS" "$FTP_SERVER"
+            echo "mirror -R --delete --verbose --exclude-glob .git/ --exclude-glob node_modules/ --exclude-glob vendor/ --exclude-glob comprobantes/ --exclude-glob prints/ --exclude-glob uploads/ --exclude-glob .env --exclude-glob .gitignore ./ /htdocs/" >> "$LFTP_CMDS"
           else
             FILES=$(git diff --name-only "${{ github.event.before }}" "${{ github.sha }}")
             if [ -z "$FILES" ]; then
               echo "No hay archivos modificados."
               exit 0
             fi
-
-            SCRIPT_FILE=$(mktemp)
-            {
-              echo "set ssl:verify-certificate no"
-              echo "open -u \"$FTP_USER\",\"$FTP_PASS\" \"$FTP_SERVER\""
-            } > "$SCRIPT_FILE"
 
             while IFS= read -r f; do
               case "$f" in
@@ -54,14 +42,14 @@ jobs:
               if [ -f "$f" ]; then
                 dir=$(dirname "$f")
                 if [ "$dir" != "." ]; then
-                  echo "mkdir -p \"$dir\"" >> "$SCRIPT_FILE"
+                  echo "mkdir -p -f \"/htdocs/$dir\"" >> "$LFTP_CMDS"
                 fi
-                echo "put -O \"$dir\" \"$f\"" >> "$SCRIPT_FILE"
+                echo "put -O \"/htdocs/$dir\" \"$f\"" >> "$LFTP_CMDS"
                 echo "  -> $f"
               fi
             done <<< "$FILES"
-
-            echo "quit" >> "$SCRIPT_FILE"
-            lftp -f "$SCRIPT_FILE"
-            rm -f "$SCRIPT_FILE"
           fi
+
+          echo "quit" >> "$LFTP_CMDS"
+          lftp -f "$LFTP_CMDS"
+          rm -f "$LFTP_CMDS"
