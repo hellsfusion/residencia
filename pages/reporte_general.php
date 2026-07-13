@@ -1,6 +1,6 @@
 <?php
 include __DIR__ . '/../php/header.php';
-// include __DIR__ . '/../php/error_reporting.php';
+include __DIR__ . '/../php/error_reporting.php';
 // var_dump(__DIR__ . '/../php/error_reporting.php');
 
 // calcular cuantos meses han pasado desde el inicio del sistema hasta hoy
